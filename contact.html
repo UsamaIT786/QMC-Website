@@ -76,7 +76,7 @@
                 
                 <div class="contact-form">
                     <h2 id="form-title">Send Us a Message</h2>
-                    <form id="main-contact-form">
+                    <form id="main-contact-form" action="sendmail.php" method="POST">
                         <div class="form-group">
                             <label for="name">Your Name</label>
                             <input type="text" id="name" name="name" required>
@@ -111,6 +111,7 @@
                         </div>
                         
                         <button type="submit" class="btn">Send Message</button>
+                        <div id="form-success" style="display:none;color:green;margin-top:10px;">Thank you! Your message has been sent.</div>
                     </form>
                 </div>
             </div>
@@ -178,19 +179,15 @@
             const contactForm = document.getElementById('main-contact-form');
             
             contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
                 let isValid = true;
-                
                 // Reset errors
                 document.querySelectorAll('.error').forEach(el => el.textContent = '');
-                
                 // Validate name
                 const name = document.getElementById('name').value.trim();
                 if(name === '') {
                     document.getElementById('name-error').textContent = 'Name is required';
                     isValid = false;
                 }
-                
                 // Validate email
                 const email = document.getElementById('email').value.trim();
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -198,20 +195,20 @@
                     document.getElementById('email-error').textContent = 'Email is required';
                     isValid = false;
                 } else if(!emailRegex.test(email)) {
-                    document.getElementById('email-error').textContent = 'Please enter a valid email';
+                    document.getElementById('email-error').textContent = 'Invalid email';
                     isValid = false;
                 }
-                
                 // Validate message
                 const message = document.getElementById('message').value.trim();
                 if(message === '') {
                     document.getElementById('message-error').textContent = 'Message is required';
                     isValid = false;
                 }
-                
-                if(isValid) {
-                    alert('Thank you for your message! We will get back to you soon.');
-                    contactForm.reset();
+                if(!isValid) {
+                    e.preventDefault();
+                } else {
+                    // Show success message after submit (for demo, Formspree will redirect or show its own message)
+                    document.getElementById('form-success').style.display = 'block';
                 }
             });
             

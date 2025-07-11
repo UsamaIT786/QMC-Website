@@ -1970,6 +1970,16 @@ footer {
     .portfolio-grid {
         grid-template-columns: 1fr;
     }
+    .about-section .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .about-image img {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+        display: block;
+    }
 }
 
 @media (max-width: 576px) {

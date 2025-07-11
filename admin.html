@@ -136,25 +136,43 @@
             </div>
         </form>
         <a href="index.html" class="back-to-home-btn" id="backToHomeBtn">Back to Home</a>
+        <button onclick="clearLogin()" class="back-to-home-btn" style="margin-top: 10px; background: #e74c3c; color: white; border-color: #e74c3c;">Clear Login</button>
     </div>
 
     <script>
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            console.log('Admin page loaded, login status:', isLoggedIn); // Debug log
+            // Remove automatic redirect - let user login properly
+        });
+        
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
+            console.log('Login attempt:', { email, password }); // Debug log
+            
             // Hardcoded admin credentials
             if(email === 'admin@site.com' && password === 'admin123') {
                 // Store login state in localStorage
                 localStorage.setItem('adminLoggedIn', 'true');
+                console.log('Login successful, redirecting to dashboard'); // Debug log
                 // Redirect to dashboard
                 window.location.href = 'dashboard.html';
             } else {
+                console.log('Login failed'); // Debug log
                 document.getElementById('errorMessage').style.display = 'block';
             }
         });
+        
+        function clearLogin() {
+            localStorage.removeItem('adminLoggedIn');
+            console.log('Login cleared'); // Debug log
+            alert('Login cleared! You can now login again.');
+        }
     </script>
    
 </body>

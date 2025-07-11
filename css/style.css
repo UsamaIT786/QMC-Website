@@ -1980,6 +1980,12 @@ footer {
         margin: 0 auto;
         display: block;
     }
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+    .blog-image {
+        height: 180px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -2012,5 +2018,11 @@ footer {
     
     #newsletter-form button {
         border-radius: 4px;
+    }
+    .blog-image {
+        height: 120px;
+    }
+    .blog-content {
+        padding: 10px;
     }
 }

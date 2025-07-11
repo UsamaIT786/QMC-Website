@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Business Solutions CMS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --primary-color: #3498db;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark-color);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu h3 {
+            padding: 0.5rem 1rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu li a.active {
+            background-color: var(--primary-color);
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            transition: all 0.3s;
+        }
+        
+        .header {
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+            position: fixed;
+            width: calc(100% - var(--sidebar-width));
+            z-index: 100;
+        }
+        
+        .header-left h2 {
+            color: var(--dark-color);
+            font-size: 1.25rem;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-menu-btn img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .user-menu-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 0.5rem 0;
+            width: 200px;
+            display: none;
+        }
+        
+        .user-menu-dropdown a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--dark-color);
+            text-decoration: none;
+        }
+        
+        .user-menu-dropdown a:hover {
+            background-color: var(--light-color);
+        }
+        
+        .user-menu:hover .user-menu-dropdown {
+            display: block;
+        }
+        
+        .content {
+            padding: 1.5rem;
+            margin-top: var(--header-height);
+        }
+        
+        .page-title {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-header h3 {
+            color: var(--dark-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            margin-top: 1rem;
+            border: 1px dashed #ddd;
+            padding: 0.5rem;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 2000;
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: var(--sidebar-width);
+                box-shadow: 2px 0 10px rgba(0,0,0,0.08);
+                background: var(--dark-color);
+                transition: transform 0.3s;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .header {
+                width: 100%;
+            }
+            .menu-toggle {
+                display: inline-block;
+                background: none;
+                border: none;
+                font-size: 1.7rem;
+                color: var(--dark-color);
+                margin-right: 10px;
+                cursor: pointer;
+                vertical-align: middle;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.25);
+                z-index: 1999;
+            }
+            .sidebar.active + .sidebar-overlay {
+                display: block;
+            }
+        }
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none !important;
+            }
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            #backToHomeBtn {
+                display: inline-block;
+                background: var(--primary-color);
+                color: #fff;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                margin-left: 10px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+                text-align: center;
+                transition: background 0.2s;
+                vertical-align: middle;
+            }
+            #backToHomeBtn:hover {
+                background: var(--dark-color);
+                color: #fff;
+            }
+        }
+        @media (min-width: 769px) {
+            #backToHomeBtn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="./logo.png" alt="Business Solutions Logo" style="height: 80px; width: auto; margin-bottom: 1rem;">
+            <h2>Business Solutions</h2>
+            <p>Content Management System</p>
+        </div>
+        
+        <div class="sidebar-menu">
+            <h3>Navigation</h3>
+            <ul>
+                <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" data-tab="home"><i class="fas fa-home"></i> Home Page</a></li>
+                <li><a href="#" data-tab="about"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="#" data-tab="services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+                <li><a href="#" data-tab="portfolio"><i class="fas fa-briefcase"></i> Portfolio</a></li>
+                <li><a href="#" data-tab="blog"><i class="fas fa-blog"></i> Blog</a></li>
+                <li><a href="#" data-tab="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="#" data-tab="testimonials"><i class="fas fa-quote-left"></i> Testimonials</a></li>
+                <li><a href="#" data-tab="privacy"><i class="fas fa-lock"></i> Privacy/FAQs</a></li>
+            </ul>
+            
+            <h3>Actions</h3>
+            <ul>
+                <li><a href="#" id="livePreviewBtn"><i class="fas fa-eye"></i> Live Preview</a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <h2 id="currentTabTitle">Dashboard</h2>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-menu">
+                    <div class="user-menu-btn">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Admin User">
+                        <span>Admin</span>
+                    </div>
+                    <div class="user-menu-dropdown">
+                        <a href="#"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="dropdownLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard-tab">
+                <h1 class="page-title">Dashboard</h1>
+                
+                <div class="card">
+                    <h3>Welcome to Business Solutions CMS</h3>
+                    <p>Use this admin panel to manage all content on your website. Select a page from the sidebar to edit its content.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Quick Stats</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                            <h4>Pages</h4>
+                            <p style="font-size: 1.5rem; font-weight: bold;">8</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                            <h4>Services</h4>
+                            <p style="font-size: 1.5rem; font-weight: bold;">6</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                            <h4>Blog Posts</h4>
+                            <p style="font-size: 1.5rem; font-weight: bold;">6</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                            <h4>Testimonials</h4>
+                            <p style="font-size: 1.5rem; font-weight: bold;">4</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Recent Activity</h3>
+                    <ul style="list-style: none;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">Updated Home Page content - Today, 10:30 AM</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">Added new Service - Yesterday, 3:45 PM</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">Published new Blog Post - June 12, 2023</li>
+                        <li style="padding: 0.5rem 0;">Updated Testimonials - June 10, 2023</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Home Page Tab -->
+            <div class="tab-content" id="home-tab">
+                <h1 class="page-title">Home Page Content</h1>
+                
+                <div id="home-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hero Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-title">Hero Title</label>
+                        <input type="text" id="hero-title" placeholder="Promote your Business">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-subtitle">Hero Subtitle</label>
+                        <input type="text" id="hero-subtitle" placeholder="How many from finding your place">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-description">Hero Description</label>
+                        <textarea id="hero-description" placeholder="We help businesses grow through innovative solutions..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-btn">Hero Button Text</label>
+                        <input type="text" id="hero-btn" placeholder="Get Started">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-img">Hero Image URL</label>
+                        <input type="text" id="hero-img" placeholder="https://images.unsplash.com/photo-1522071820081-009f0129c71c...">
+                        <img src="" alt="Hero Image Preview" class="image-preview" id="hero-img-preview">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Features Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="features-title">Section Title</label>
+                        <input type="text" id="features-title" placeholder="Our Core Features">
+                    </div>
+                    <div class="form-group">
+                        <label for="features-subtitle">Section Subtitle</label>
+                        <input type="text" id="features-subtitle" placeholder="What makes us different">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Feature Items</h4>
+                    
+                    <div class="form-group">
+                        <label for="feature1-title">Feature 1 Title</label>
+                        <input type="text" id="feature1-title" placeholder="Business Growth">
+                    </div>
+                    <div class="form-group">
+                        <label for="feature1-desc">Feature 1 Description</label>
+                        <textarea id="feature1-desc" placeholder="Strategies to help your business expand..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feature2-title">Feature 2 Title</label>
+                        <input type="text" id="feature2-title" placeholder="Innovative Solutions">
+                    </div>
+                    <div class="form-group">
+                        <label for="feature2-desc">Feature 2 Description</label>
+                        <textarea id="feature2-desc" placeholder="Creative approaches to solve..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feature3-title">Feature 3 Title</label>
+                        <input type="text" id="feature3-title" placeholder="Team Building">
+                    </div>
+                    <div class="form-group">
+                        <label for="feature3-desc">Feature 3 Description</label>
+                        <textarea id="feature3-desc" placeholder="Develop high-performing teams..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>CTA Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="cta-title">CTA Title</label>
+                        <input type="text" id="cta-title" placeholder="Promote your salesplace">
+                    </div>
+                    <div class="form-group">
+                        <label for="cta-subtitle">CTA Subtitle</label>
+                        <input type="text" id="cta-subtitle" placeholder="Ready to take your business to the next level?">
+                    </div>
+                    <div class="form-group">
+                        <label for="cta-btn">CTA Button Text</label>
+                        <input type="text" id="cta-btn" placeholder="Contact Us Today">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-home-btn">Save Home Page</button>
+            </div>
+            
+            <!-- About Us Tab -->
+            <div class="tab-content" id="about-tab">
+                <h1 class="page-title">About Us Page Content</h1>
+                
+                <div id="about-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="about-title">Page Title</label>
+                        <input type="text" id="about-title" placeholder="About Our Company">
+                    </div>
+                    <div class="form-group">
+                        <label for="about-subtitle">Page Subtitle</label>
+                        <input type="text" id="about-subtitle" placeholder="Learn more about who we are and what we stand for">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>About Content</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="about-mission-title">Mission Title</label>
+                        <input type="text" id="about-mission-title" placeholder="Our Mission">
+                    </div>
+                    <div class="form-group">
+                        <label for="about-mission-text">Mission Text</label>
+                        <textarea id="about-mission-text" placeholder="To empower businesses through innovative solutions..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="about-vision-title">Vision Title</label>
+                        <input type="text" id="about-vision-title" placeholder="Our Vision">
+                    </div>
+                    <div class="form-group">
+                        <label for="about-vision-text">Vision Text</label>
+                        <textarea id="about-vision-text" placeholder="To be the leading business solutions provider..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="about-values-title">Values Title</label>
+                        <input type="text" id="about-values-title" placeholder="Our Values">
+                    </div>
+                    <div class="form-group">
+                        <label for="about-values-list">Values List (HTML allowed)</label>
+                        <textarea id="about-values-list" placeholder="<li>Integrity in all our dealings</li><li>Innovation to drive solutions</li>..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="about-img">About Image URL</label>
+                        <input type="text" id="about-img" placeholder="https://images.unsplash.com/photo-1521791136064-7986c2920216...">
+                        <img src="" alt="About Image Preview" class="image-preview" id="about-img-preview">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Team Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="team-title">Section Title</label>
+                        <input type="text" id="team-title" placeholder="Meet Our Team">
+                    </div>
+                    <div class="form-group">
+                        <label for="team-subtitle">Section Subtitle</label>
+                        <input type="text" id="team-subtitle" placeholder="The professionals behind your success">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Team Members</h4>
+                    
+                    <div class="form-group">
+                        <label for="team1-name">Team Member 1 Name</label>
+                        <input type="text" id="team1-name" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="team1-position">Team Member 1 Position</label>
+                        <input type="text" id="team1-position" placeholder="CEO & Founder">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team2-name">Team Member 2 Name</label>
+                        <input type="text" id="team2-name" placeholder="Jane Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="team2-position">Team Member 2 Position</label>
+                        <input type="text" id="team2-position" placeholder="Marketing Director">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team3-name">Team Member 3 Name</label>
+                        <input type="text" id="team3-name" placeholder="Michael Johnson">
+                    </div>
+                    <div class="form-group">
+                        <label for="team3-position">Team Member 3 Position</label>
+                        <input type="text" id="team3-position" placeholder="Financial Consultant">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team4-name">Team Member 4 Name</label>
+                        <input type="text" id="team4-name" placeholder="Sarah Williams">
+                    </div>
+                    <div class="form-group">
+                        <label for="team4-position">Team Member 4 Position</label>
+                        <input type="text" id="team4-position" placeholder="Operations Manager">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-about-btn">Save About Page</button>
+            </div>
+            
+            <!-- Services Tab -->
+            <div class="tab-content" id="services-tab">
+                <h1 class="page-title">Services Page Content</h1>
+                
+                <div id="services-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="services-title">Page Title</label>
+                        <input type="text" id="services-title" placeholder="Our Services">
+                    </div>
+                    <div class="form-group">
+                        <label for="services-subtitle">Page Subtitle</label>
+                        <input type="text" id="services-subtitle" placeholder="Professional solutions tailored to your business needs">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Services List</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service1-title">Service 1 Title</label>
+                        <input type="text" id="service1-title" placeholder="Business Strategy">
+                    </div>
+                    <div class="form-group">
+                        <label for="service1-desc">Service 1 Description</label>
+                        <textarea id="service1-desc" placeholder="Comprehensive business planning and strategy development..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service2-title">Service 2 Title</label>
+                        <input type="text" id="service2-title" placeholder="Marketing Solutions">
+                    </div>
+                    <div class="form-group">
+                        <label for="service2-desc">Service 2 Description</label>
+                        <textarea id="service2-desc" placeholder="Targeted marketing strategies to increase brand awareness..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service3-title">Service 3 Title</label>
+                        <input type="text" id="service3-title" placeholder="Financial Consulting">
+                    </div>
+                    <div class="form-group">
+                        <label for="service3-desc">Service 3 Description</label>
+                        <textarea id="service3-desc" placeholder="Expert financial advice to optimize your resources..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service4-title">Service 4 Title</label>
+                        <input type="text" id="service4-title" placeholder="HR Solutions">
+                    </div>
+                    <div class="form-group">
+                        <label for="service4-desc">Service 4 Description</label>
+                        <textarea id="service4-desc" placeholder="Human resources strategies to build and maintain..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service5-title">Service 5 Title</label>
+                        <input type="text" id="service5-title" placeholder="Technology Integration">
+                    </div>
+                    <div class="form-group">
+                        <label for="service5-desc">Service 5 Description</label>
+                        <textarea id="service5-desc" placeholder="Modern technology solutions to streamline operations..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service6-title">Service 6 Title</label>
+                        <input type="text" id="service6-title" placeholder="Global Expansion">
+                    </div>
+                    <div class="form-group">
+                        <label for="service6-desc">Service 6 Description</label>
+                        <textarea id="service6-desc" placeholder="Guidance and support for businesses looking to expand..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Process Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="process-title">Section Title</label>
+                        <input type="text" id="process-title" placeholder="Our Process">
+                    </div>
+                    <div class="form-group">
+                        <label for="process-subtitle">Section Subtitle</label>
+                        <input type="text" id="process-subtitle" placeholder="How we work with our clients">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Process Steps</h4>
+                    
+                    <div class="form-group">
+                        <label for="step1-title">Step 1 Title</label>
+                        <input type="text" id="step1-title" placeholder="Discovery">
+                    </div>
+                    <div class="form-group">
+                        <label for="step1-desc">Step 1 Description</label>
+                        <input type="text" id="step1-desc" placeholder="We learn about your business, goals, and challenges">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step2-title">Step 2 Title</label>
+                        <input type="text" id="step2-title" placeholder="Analysis">
+                    </div>
+                    <div class="form-group">
+                        <label for="step2-desc">Step 2 Description</label>
+                        <input type="text" id="step2-desc" placeholder="We analyze your current situation and opportunities">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step3-title">Step 3 Title</label>
+                        <input type="text" id="step3-title" placeholder="Solution Design">
+                    </div>
+                    <div class="form-group">
+                        <label for="step3-desc">Step 3 Description</label>
+                        <input type="text" id="step3-desc" placeholder="We create customized solutions for your business">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step4-title">Step 4 Title</label>
+                        <input type="text" id="step4-title" placeholder="Implementation">
+                    </div>
+                    <div class="form-group">
+                        <label for="step4-desc">Step 4 Description</label>
+                        <input type="text" id="step4-desc" placeholder="We implement the solutions with your team">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step5-title">Step 5 Title</label>
+                        <input type="text" id="step5-title" placeholder="Evaluation">
+                    </div>
+                    <div class="form-group">
+                        <label for="step5-desc">Step 5 Description</label>
+                        <input type="text" id="step5-desc" placeholder="We measure results and optimize performance">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>CTA Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="services-cta-title">CTA Title</label>
+                        <input type="text" id="services-cta-title" placeholder="Ready to transform your business?">
+                    </div>
+                    <div class="form-group">
+                        <label for="services-cta-subtitle">CTA Subtitle</label>
+                        <input type="text" id="services-cta-subtitle" placeholder="Contact us today to discuss how we can help you achieve your goals">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-services-btn">Save Services Page</button>
+            </div>
+            
+            <!-- Portfolio Tab -->
+            <div class="tab-content" id="portfolio-tab">
+                <h1 class="page-title">Portfolio Page Content</h1>
+                
+                <div id="portfolio-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-title">Page Title</label>
+                        <input type="text" id="portfolio-title" placeholder="Our Portfolio">
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-subtitle">Page Subtitle</label>
+                        <input type="text" id="portfolio-subtitle" placeholder="See our work and successful projects">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Portfolio Projects</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project1-title">Project 1 Title</label>
+                        <input type="text" id="project1-title" placeholder="Global Expansion Strategy">
+                    </div>
+                    <div class="form-group">
+                        <label for="project1-desc">Project 1 Description</label>
+                        <input type="text" id="project1-desc" placeholder="Helped a retail company expand to 3 new countries">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project2-title">Project 2 Title</label>
+                        <input type="text" id="project2-title" placeholder="Digital Marketing Campaign">
+                    </div>
+                    <div class="form-group">
+                        <label for="project2-desc">Project 2 Description</label>
+                        <input type="text" id="project2-desc" placeholder="Increased leads by 150% for a tech startup">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project3-title">Project 3 Title</label>
+                        <input type="text" id="project3-title" placeholder="Financial Restructuring">
+                    </div>
+                    <div class="form-group">
+                        <label for="project3-desc">Project 3 Description</label>
+                        <input type="text" id="project3-desc" placeholder="Helped a manufacturing firm reduce costs by 30%">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project4-title">Project 4 Title</label>
+                        <input type="text" id="project4-title" placeholder="ERP Implementation">
+                    </div>
+                    <div class="form-group">
+                        <label for="project4-desc">Project 4 Description</label>
+                        <input type="text" id="project4-desc" placeholder="Streamlined operations for a logistics company">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project5-title">Project 5 Title</label>
+                        <input type="text" id="project5-title" placeholder="Business Turnaround">
+                    </div>
+                    <div class="form-group">
+                        <label for="project5-desc">Project 5 Description</label>
+                        <input type="text" id="project5-desc" placeholder="Revitalized a struggling family business">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="project6-title">Project 6 Title</label>
+                        <input type="text" id="project6-title" placeholder="Brand Repositioning">
+                    </div>
+                    <div class="form-group">
+                        <label for="project6-desc">Project 6 Description</label>
+                        <input type="text" id="project6-desc" placeholder="Rebranded a traditional company for modern markets">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Stats Section</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stat1-number">Stat 1 Number</label>
+                        <input type="text" id="stat1-number" placeholder="150+">
+                    </div>
+                    <div class="form-group">
+                        <label for="stat1-text">Stat 1 Text</label>
+                        <input type="text" id="stat1-text" placeholder="Projects Completed">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stat2-number">Stat 2 Number</label>
+                        <input type="text" id="stat2-number" placeholder="95%">
+                    </div>
+                    <div class="form-group">
+                        <label for="stat2-text">Stat 2 Text</label>
+                        <input type="text" id="stat2-text" placeholder="Client Satisfaction">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stat3-number">Stat 3 Number</label>
+                        <input type="text" id="stat3-number" placeholder="50+">
+                    </div>
+                    <div class="form-group">
+                        <label for="stat3-text">Stat 3 Text</label>
+                        <input type="text" id="stat3-text" placeholder="Industries Served">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stat4-number">Stat 4 Number</label>
+                        <input type="text" id="stat4-number" placeholder="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="stat4-text">Stat 4 Text</label>
+                        <input type="text" id="stat4-text" placeholder="Countries">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-portfolio-btn">Save Portfolio Page</button>
+            </div>
+            
+            <!-- Blog Tab -->
+            <div class="tab-content" id="blog-tab">
+                <h1 class="page-title">Blog Page Content</h1>
+                
+                <div id="blog-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="blog-title">Page Title</label>
+                        <input type="text" id="blog-title" placeholder="Business Insights">
+                    </div>
+                    <div class="form-group">
+                        <label for="blog-subtitle">Page Subtitle</label>
+                        <input type="text" id="blog-subtitle" placeholder="Latest articles and news from our experts">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Blog Posts</h3>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Post 1</h4>
+                    <div class="form-group">
+                        <label for="post1-date">Post Date</label>
+                        <input type="text" id="post1-date" placeholder="June 15, 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post1-category">Post Category</label>
+                        <input type="text" id="post1-category" placeholder="Strategy">
+                    </div>
+                    <div class="form-group">
+                        <label for="post1-title">Post Title</label>
+                        <input type="text" id="post1-title" placeholder="5 Key Strategies for Business Growth in 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post1-excerpt">Post Excerpt</label>
+                        <textarea id="post1-excerpt" placeholder="Discover the most effective strategies businesses are using..."></textarea>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Post 2</h4>
+                    <div class="form-group">
+                        <label for="post2-date">Post Date</label>
+                        <input type="text" id="post2-date" placeholder="May 28, 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post2-category">Post Category</label>
+                        <input type="text" id="post2-category" placeholder="Technology">
+                    </div>
+                    <div class="form-group">
+                        <label for="post2-title">Post Title</label>
+                        <input type="text" id="post2-title" placeholder="The Digital Transformation Journey: Where to Start">
+                    </div>
+                    <div class="form-group">
+                        <label for="post2-excerpt">Post Excerpt</label>
+                        <textarea id="post2-excerpt" placeholder="Learn how to begin your company's digital transformation..."></textarea>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Post 3</h4>
+                    <div class="form-group">
+                        <label for="post3-date">Post Date</label>
+                        <input type="text" id="post3-date" placeholder="April 10, 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post3-category">Post Category</label>
+                        <input type="text" id="post3-category" placeholder="HR">
+                    </div>
+                    <div class="form-group">
+                        <label for="post3-title">Post Title</label>
+                        <input type="text" id="post3-title" placeholder="Building Company Culture in a Remote Work Environment">
+                    </div>
+                    <div class="form-group">
+                        <label for="post3-excerpt">Post Excerpt</label>
+                        <textarea id="post3-excerpt" placeholder="Practical tips for maintaining and strengthening..."></textarea>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Post 4</h4>
+                    <div class="form-group">
+                        <label for="post4-date">Post Date</label>
+                        <input type="text" id="post4-date" placeholder="March 22, 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post4-category">Post Category</label>
+                        <input type="text" id="post4-category" placeholder="Marketing">
+                    </div>
+                    <div class="form-group">
+                        <label for="post4-title">Post Title</label>
+                        <input type="text" id="post4-title" placeholder="Emerging Marketing Trends You Can't Ignore">
+                    </div>
+                    <div class="form-group">
+                        <label for="post4-excerpt">Post Excerpt</label>
+                        <textarea id="post4-excerpt" placeholder="Stay ahead of the curve with these emerging marketing trends..."></textarea>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Post 5</h4>
+                    <div class="form-group">
+                        <label for="post5-date">Post Date</label>
+                        <input type="text" id="post5-date" placeholder="February 15, 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post5-category">Post Category</label>
+                        <input type="text" id="post5-category" placeholder="Leadership">
+                    </div>
+                    <div class="form-group">
+                        <label for="post5-title">Post Title</label>
+                        <input type="text" id="post5-title" placeholder="The 7 Essential Leadership Skills for 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post5-excerpt">Post Excerpt</label>
+                        <textarea id="post5-excerpt" placeholder="The business landscape is changing rapidly..."></textarea>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Post 6</h4>
+                    <div class="form-group">
+                        <label for="post6-date">Post Date</label>
+                        <input type="text" id="post6-date" placeholder="January 5, 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="post6-category">Post Category</label>
+                        <input type="text" id="post6-category" placeholder="Finance">
+                    </div>
+                    <div class="form-group">
+                        <label for="post6-title">Post Title</label>
+                        <input type="text" id="post6-title" placeholder="Financial Planning in Uncertain Economic Times">
+                    </div>
+                    <div class="form-group">
+                        <label for="post6-excerpt">Post Excerpt</label>
+                        <textarea id="post6-excerpt" placeholder="How to create a financial plan that keeps your business resilient..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Newsletter Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsletter-title">Section Title</label>
+                        <input type="text" id="newsletter-title" placeholder="Subscribe to Our Newsletter">
+                    </div>
+                    <div class="form-group">
+                        <label for="newsletter-subtitle">Section Subtitle</label>
+                        <input type="text" id="newsletter-subtitle" placeholder="Get the latest business insights and updates delivered to your inbox">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-blog-btn">Save Blog Page</button>
+            </div>
+            
+            <!-- Contact Tab -->
+            <div class="tab-content" id="contact-tab">
+                <h1 class="page-title">Contact Page Content</h1>
+                
+                <div id="contact-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-title">Page Title</label>
+                        <input type="text" id="contact-title" placeholder="Contact Us">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-subtitle">Page Subtitle</label>
+                        <input type="text" id="contact-subtitle" placeholder="We'd love to hear from you">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Contact Info</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="info-title">Section Title</label>
+                        <input type="text" id="info-title" placeholder="Get in Touch">
+                    </div>
+                    <div class="form-group">
+                        <label for="info-text">Section Text</label>
+                        <textarea id="info-text" placeholder="Have questions about our services or want to discuss..."></textarea>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Contact Details</h4>
+                    
+                    <div class="form-group">
+                        <label for="address-title">Address Title</label>
+                        <input type="text" id="address-title" placeholder="Our Office">
+                    </div>
+                    <div class="form-group">
+                        <label for="address-text">Address Text</label>
+                        <input type="text" id="address-text" placeholder="123 Business Ave, Suite 100<br>New York, NY 10001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone-title">Phone Title</label>
+                        <input type="text" id="phone-title" placeholder="Phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-text">Phone Text</label>
+                        <input type="text" id="phone-text" placeholder="(123) 456-7890<br>Mon-Fri, 9am-5pm EST">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email-title">Email Title</label>
+                        <input type="text" id="email-title" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="email-text">Email Text</label>
+                        <input type="text" id="email-text" placeholder="info@businesssolutions.com<br>support@businesssolutions.com">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Contact Form</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-title">Form Title</label>
+                        <input type="text" id="form-title" placeholder="Send Us a Message">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-contact-btn">Save Contact Page</button>
+            </div>
+            
+            <!-- Testimonials Tab -->
+            <div class="tab-content" id="testimonials-tab">
+                <h1 class="page-title">Testimonials Page Content</h1>
+                
+                <div id="testimonials-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonials-title">Page Title</label>
+                        <input type="text" id="testimonials-title" placeholder="Client Testimonials">
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonials-subtitle">Page Subtitle</label>
+                        <input type="text" id="testimonials-subtitle" placeholder="What our clients say about us">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Testimonials</h3>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Testimonial 1</h4>
+                    <div class="form-group">
+                        <label for="testimonial1-text">Testimonial Text</label>
+                        <textarea id="testimonial1-text" placeholder="&quot;Business Solutions transformed our company's approach...&quot;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial1-name">Client Name</label>
+                        <input type="text" id="testimonial1-name" placeholder="Sarah Johnson">
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial1-position">Client Position</label>
+                        <input type="text" id="testimonial1-position" placeholder="CEO, TechStart Inc.">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Testimonial 2</h4>
+                    <div class="form-group">
+                        <label for="testimonial2-text">Testimonial Text</label>
+                        <textarea id="testimonial2-text" placeholder="&quot;The financial consulting services provided by...&quot;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial2-name">Client Name</label>
+                        <input type="text" id="testimonial2-name" placeholder="Michael Chen">
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial2-position">Client Position</label>
+                        <input type="text" id="testimonial2-position" placeholder="CFO, Global Manufacturing">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Testimonial 3</h4>
+                    <div class="form-group">
+                        <label for="testimonial3-text">Testimonial Text</label>
+                        <textarea id="testimonial3-text" placeholder="&quot;Their team building strategies completely changed...&quot;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial3-name">Client Name</label>
+                        <input type="text" id="testimonial3-name" placeholder="Emily Rodriguez">
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial3-position">Client Position</label>
+                        <input type="text" id="testimonial3-position" placeholder="HR Director, ServicePro">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Testimonial 4</h4>
+                    <div class="form-group">
+                        <label for="testimonial4-text">Testimonial Text</label>
+                        <textarea id="testimonial4-text" placeholder="&quot;The expansion strategy they developed helped us...&quot;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial4-name">Client Name</label>
+                        <input type="text" id="testimonial4-name" placeholder="David Wilson">
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonial4-position">Client Position</label>
+                        <input type="text" id="testimonial4-position" placeholder="President, RetailChain">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Clients Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="clients-title">Section Title</label>
+                        <input type="text" id="clients-title" placeholder="Our Valued Clients">
+                    </div>
+                    <div class="form-group">
+                        <label for="clients-subtitle">Section Subtitle</label>
+                        <input type="text" id="clients-subtitle" placeholder="Some of the companies we've worked with">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>CTA Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonials-cta-title">CTA Title</label>
+                        <input type="text" id="testimonials-cta-title" placeholder="Ready to experience the difference?">
+                    </div>
+                    <div class="form-group">
+                        <label for="testimonials-cta-subtitle">CTA Subtitle</label>
+                        <input type="text" id="testimonials-cta-subtitle" placeholder="Contact us today to discuss how we can help your business succeed">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-testimonials-btn">Save Testimonials Page</button>
+            </div>
+            
+            <!-- Privacy/FAQs Tab -->
+            <div class="tab-content" id="privacy-tab">
+                <h1 class="page-title">Privacy Policy & FAQs Page Content</h1>
+                
+                <div id="privacy-alert" class="alert" style="display: none;"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Page Header</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="privacy-title">Page Title</label>
+                        <input type="text" id="privacy-title" placeholder="Privacy Policy & FAQs">
+                    </div>
+                    <div class="form-group">
+                        <label for="privacy-subtitle">Page Subtitle</label>
+                        <input type="text" id="privacy-subtitle" placeholder="Your questions answered and your privacy protected">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Privacy Policy</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="policy-title">Section Title</label>
+                        <input type="text" id="policy-title" placeholder="Privacy Policy">
+                    </div>
+                    <div class="form-group">
+                        <label for="policy-updated">Last Updated Text</label>
+                        <input type="text" id="policy-updated" placeholder="Last Updated: June 1, 2023">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">Policy Sections</h4>
+                    
+                    <div class="form-group">
+                        <label for="policy1-title">Section 1 Title</label>
+                        <input type="text" id="policy1-title" placeholder="Information We Collect">
+                    </div>
+                    <div class="form-group">
+                        <label for="policy1-text">Section 1 Text</label>
+                        <textarea id="policy1-text" placeholder="We collect information you provide directly to us..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="policy2-title">Section 2 Title</label>
+                        <input type="text" id="policy2-title" placeholder="How We Use Your Information">
+                    </div>
+                    <div class="form-group">
+                        <label for="policy2-text">Section 2 Text</label>
+                        <textarea id="policy2-text" placeholder="We use the information we collect to provide..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="policy3-title">Section 3 Title</label>
+                        <input type="text" id="policy3-title" placeholder="Information Sharing">
+                    </div>
+                    <div class="form-group">
+                        <label for="policy3-text">Section 3 Text</label>
+                        <textarea id="policy3-text" placeholder="We do not sell or rent your personal information..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="policy4-title">Section 4 Title</label>
+                        <input type="text" id="policy4-title" placeholder="Data Security">
+                    </div>
+                    <div class="form-group">
+                        <label for="policy4-text">Section 4 Text</label>
+                        <textarea id="policy4-text" placeholder="We implement appropriate technical and organizational..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="policy5-title">Section 5 Title</label>
+                        <input type="text" id="policy5-title" placeholder="Your Rights">
+                    </div>
+                    <div class="form-group">
+                        <label for="policy5-text">Section 5 Text</label>
+                        <textarea id="policy5-text" placeholder="You have the right to access, correct, or delete..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>FAQs Section</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="faq-title">Section Title</label>
+                        <input type="text" id="faq-title" placeholder="Frequently Asked Questions">
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem;">FAQ Items</h4>
+                    
+                    <div class="form-group">
+                        <label for="faq1-question">FAQ 1 Question</label>
+                        <input type="text" id="faq1-question" placeholder="What services do you offer?">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq1-answer">FAQ 1 Answer</label>
+                        <textarea id="faq1-answer" placeholder="We offer a comprehensive range of business solutions..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="faq2-question">FAQ 2 Question</label>
+                        <input type="text" id="faq2-question" placeholder="How do I get started with your services?">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq2-answer">FAQ 2 Answer</label>
+                        <textarea id="faq2-answer" placeholder="Getting started is easy! Simply contact us..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="faq3-question">FAQ 3 Question</label>
+                        <input type="text" id="faq3-question" placeholder="What industries do you work with?">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq3-answer">FAQ 3 Answer</label>
+                        <textarea id="faq3-answer" placeholder="We have experience working with businesses..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="faq4-question">FAQ 4 Question</label>
+                        <input type="text" id="faq4-question" placeholder="How do you measure success?">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq4-answer">FAQ 4 Answer</label>
+                        <textarea id="faq4-answer" placeholder="We establish clear KPIs (Key Performance Indicators)..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="faq5-question">FAQ 5 Question</label>
+                        <input type="text" id="faq5-question" placeholder="What makes your approach different?">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq5-answer">FAQ 5 Answer</label>
+                        <textarea id="faq5-answer" placeholder="Our approach combines industry expertise with..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="faq6-question">FAQ 6 Question</label>
+                        <input type="text" id="faq6-question" placeholder="Do you offer ongoing support?">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq6-answer">FAQ 6 Answer</label>
+                        <textarea id="faq6-answer" placeholder="Yes, we offer various ongoing support options..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Contact CTA</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="privacy-cta-title">CTA Title</label>
+                        <input type="text" id="privacy-cta-title" placeholder="Still have questions?">
+                    </div>
+                    <div class="form-group">
+                        <label for="privacy-cta-subtitle">CTA Subtitle</label>
+                        <input type="text" id="privacy-cta-subtitle" placeholder="Contact us for more information about our services or privacy practices">
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" id="save-privacy-btn">Save Privacy/FAQs Page</button>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script src="js/admin.js"></script>
+    <script>
+        // Check if admin is logged in
+        if(!localStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'admin.html';
+        }
+        
+        // Logout functionality
+        document.getElementById('dropdownLogoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if(confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'admin.html';
+            }
+        });
+        
+        // Profile functionality
+        document.querySelector('.user-menu-dropdown a[href="#"]:first-child').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Profile settings will be available in the next update.');
+        });
+        
+        // Settings functionality
+        document.querySelector('.user-menu-dropdown a[href="#"]:nth-child(2)').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Settings panel will be available in the next update.');
+        });
+        
+        // Sidebar logout button
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if(confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'admin.html';
+            }
+        });
+    </script>
+</body>
+</html>
